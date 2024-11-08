@@ -38,22 +38,25 @@ Este projeto é a entrega do desafio proposto em: https://github.com/WendellTufa
     ```
     
 2.1 Executar o projeto com profile local
-    Neste profile o projeto é executado na porta 9090
-    ```
+   Neste profile o projeto é executado na porta 9090
+   
     mvn spring-boot:run -Dspring-boot.run.profiles=local
-    ```
+    
     
 3. Acesse o serviço:
-    O serviço estará disponível em `http://localhost:8080`.
    
-    No profile local `http://localhost:9090`.
+    O serviço estará disponível em `http://localhost:8080`
+   
+    No profile local `http://localhost:9090`
 
-4. URIs da aplicação
+5. URIs da aplicação
+
    Trazer todos os produtos: `http://localhost:8080/api/products`
    
    Trazer um id especifico: `http://localhost:8080/api/products/1`
 
    Health check: `http://localhost:8080/health`
+
 Obs.: Se estiver no profile local, trocar a porta de 8080 por 9090
    
 ### Executar Testes
@@ -67,35 +70,43 @@ mvn clean test
 O container do projeto pode ser baixado do dockerhub: https://hub.docker.com/r/lipesmile/dummy-json-client
 
 Atenção: No container tanto 'prod' como 'local' executam na mesma porta 8080, por isso, são acessados pelo browser igualmente:
+
 `http://localhost:8080`
 
 ### Usando docker
 
 1. Faça o pull da imagem
+
 ```bash
 docker pull lipesmile/dummy-json-client:v1.0
 ```
+
 2. Execute o run passando o ambiente 'prod' ou 'local'
 
 Prod:
+
 ```bash
 docker run --env ENV=prod -d -p 8080:8080 dummy-json-client
 ```
 
 Local:
+
 ```bash
 docker run --env ENV=local -d -p 8080:9090 dummy-json-client
 ```
 
 3. Verifique se a imagem está rodando
+
 ```bash
 docker ps
 ```
 
 ### Usando podman
+
 ```bash
 podman pull lipesmile/dummy-json-client:v1.0
 ```
+
 2. Execute o run passando o ambiente 'prod' ou 'local'
 
 Prod:
@@ -107,6 +118,7 @@ Local:
 ```bash
 podman run --env ENV=local -d -p 8080:9090 dummy-json-client
 ```
+
 3. Verifique se a imagem está rodando
 ```bash
 podman ps
