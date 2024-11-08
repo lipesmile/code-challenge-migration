@@ -39,10 +39,13 @@ Este projeto é a entrega do desafio proposto em: https://github.com/WendellTufa
     
 2.1 Executar o projeto com profile local
    Neste profile o projeto é executado na porta 9090
-   
+
+    mvn clean install
     mvn spring-boot:run -Dspring-boot.run.profiles=local
     
-    
+Obs.: Verificar se a porta 8080 ou 9090 não estão sendo usadas    
+
+
 3. Acesse o serviço:
    
     O serviço estará disponível em `http://localhost:8080`
@@ -58,6 +61,8 @@ Este projeto é a entrega do desafio proposto em: https://github.com/WendellTufa
    Health check: `http://localhost:8080/health`
 
 Obs.: Se estiver no profile local, trocar a porta de 8080 por 9090
+
+
    
 ### Executar Testes
 Para executar os testes unitários:
@@ -69,9 +74,13 @@ mvn clean test
 ## Executando via Container
 O container do projeto pode ser baixado do dockerhub: https://hub.docker.com/r/lipesmile/dummy-json-client
 
-Atenção: No container tanto 'prod' como 'local' executam na mesma porta 8080, por isso, são acessados pelo browser igualmente:
+
+No container tanto 'prod' como 'local' executam na mesma porta 8080, por isso, são acessados pelo browser igualmente:
 
 `http://localhost:8080`
+
+Obs.: Verificar se a porta 8080 não está sendo usada
+
 
 ### Usando docker
 
