@@ -1,42 +1,39 @@
 package com.example.dummyjson.service;
 
-import com.example.dummyjson.dto.Product;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.web.client.RestTemplate;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
 
-@RunWith(MockitoJUnitRunner.class)
+import com.example.dummyjson.dto.Product;
+import com.example.dummyjson.dto.ProductResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import reactor.core.publisher.Mono;
+
+@SpringBootTest
 public class ProductServiceTest {
 
-    @InjectMocks
     private ProductService productService;
-
-    @Mock
-    private RestTemplate restTemplate;
-
+    
+    private WebClient webClient; 
+    
     @Test
     public void testGetAllProducts() {
-        Product product1 = new Product();
-        product1.setId(1L);
-        product1.setTitle("Product 1");
-
-        Product product2 = new Product();
-        product2.setId(2L);
-        product2.setTitle("Product 2");
-
-        Product[] products = {product1, product2};
-        when(restTemplate.getForObject("https://dummyjson.com/products", Product[].class)).thenReturn(products);
-
+    	webClient = WebClient.builder()
+                .exchangeFunction(clientRequest -> 
+                        Mono.just(ClientResponse.create(HttpStatus.OK)
+                        .header("content-type", "application/json")
+                        .body(objectSerializer(productResponseMock()))
+                        .build())
+                ).build();
+        productService = new ProductService(webClient);
         List<Product> result = productService.getAllProducts();
         assertEquals(2, result.size());
         assertEquals("Product 1", result.get(0).getTitle());
@@ -44,13 +41,45 @@ public class ProductServiceTest {
 
     @Test
     public void testGetProductById() {
-        Product product = new Product();
-        product.setId(1L);
-        product.setTitle("Product 1");
 
-        when(restTemplate.getForObject("https://dummyjson.com/products/1", Product.class)).thenReturn(product);
-
+    	webClient = WebClient.builder()
+                .exchangeFunction(clientRequest -> 
+                        Mono.just(ClientResponse.create(HttpStatus.OK)
+                        .header("content-type", "application/json")
+                        .body(objectSerializer(mockProduct()))
+                        .build())
+                ).build();
+        productService = new ProductService(webClient);
         Product result = productService.getProductById(1L);
         assertEquals("Product 1", result.getTitle());
     }
+
+    
+    private String objectSerializer(Object o) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonBody = "";
+        try {
+            jsonBody = objectMapper.writeValueAsString(o);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonBody;
+    }
+    
+	private Product mockProduct() {
+		Product product = new Product();
+        product.setId(1L);
+        product.setTitle("Product 1");
+		return product;
+	}
+    
+    
+    private ProductResponse productResponseMock() {
+    	return new ProductResponse(Arrays.asList(productsMock()));
+    }
+    
+	private Product[] productsMock() {
+        Product[] products = {mockProduct(), mockProduct()};
+		return products;
+	}
 }

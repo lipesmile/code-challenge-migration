@@ -1,30 +1,45 @@
 package com.example.dummyjson.service;
 
-import com.example.dummyjson.dto.Product;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import com.example.dummyjson.dto.Product;
+import com.example.dummyjson.dto.ProductResponse;
+
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
+
 @Service
+@AllArgsConstructor
 public class ProductService {
 
-    private final String BASE_URL = "https://dummyjson.com/products";
+    private static final String URI = "/products";
+    private static final String URI_WITH_ID = "/products/{id}";
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final WebClient webClient;
 
     public List<Product> getAllProducts() {
-        Product[] products = restTemplate.getForObject(BASE_URL, Product[].class);
-        return Arrays.asList(products);
+    	Mono<ProductResponse> response = webClient.get()
+    			.uri(URI)
+                .accept(APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(ProductResponse.class);
+    	return response.block().getProducts();
     }
 
     public Product getProductById(Long id) {
-        String url = BASE_URL + "/" + id;
-        return restTemplate.getForObject(url, Product.class);
+    	
+    	return 	webClient.get()
+    			.uri(URI_WITH_ID, id)
+                .accept(APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(Product.class)
+                .block();
+
     }
 }
