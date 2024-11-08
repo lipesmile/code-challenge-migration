@@ -95,13 +95,13 @@ docker pull lipesmile/dummy-json-client:v1.0
 Prod:
 
 ```bash
-docker run --env ENV=prod -d -p 8080:8080 dummy-json-client
+docker run --env ENV=prod -d -p 8080:8080 lipesmile/dummy-json-client:v1.0
 ```
 
 Local:
 
 ```bash
-docker run --env ENV=local -d -p 8080:9090 dummy-json-client
+docker run --env ENV=local -d -p 8080:9090 lipesmile/dummy-json-client:v1.0
 ```
 
 3. Verifique se a imagem está rodando
