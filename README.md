@@ -102,21 +102,22 @@ docker ps
 ```
 
 ### Usando podman
+1. Faça o pull da imagem do dockerhub
 
 ```bash
-podman pull lipesmile/dummy-json-client:v1.0
+podman pull docker.io/lipesmile/dummy-json-client:v1.0
 ```
 
 2. Execute o run passando o ambiente 'prod' ou 'local'
 
 Prod:
 ```bash
-podman run --env ENV=prod -d -p 8080:8080 dummy-json-client
+podman run --env ENV=prod -d -p 8080:8080 docker.io/lipesmile/dummy-json-client:v1.0
 ```
 
 Local:
 ```bash
-podman run --env ENV=local -d -p 8080:9090 dummy-json-client
+podman run --env ENV=local -d -p 8080:9090 docker.io/lipesmile/dummy-json-client:v1.0
 ```
 
 3. Verifique se a imagem está rodando
